@@ -1,14 +1,14 @@
+import React from "react";
 import Link from "next/link";
-import React from 'react';
 
-
-export default function MenuLink(props:any){
+const MenuLink=(props:any)=>{
     let { href,children,...rest}=props;
     return(
         <Link 
-        legacyBehavior
+        {...rest}
         href={href}>
-            <a{...rest}>{children}</a>
+            {children}
         </Link>
     )
 }
+export default React.forwardRef(MenuLink)

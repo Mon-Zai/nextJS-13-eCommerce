@@ -16,7 +16,7 @@ export async function POST(request: Request) {
                 password: password
             }
         })
-        return NextResponse.json({ message: 'User Added successfully!' });
+        return NextResponse.json({ message: 'User Added' });
       } catch (error) {
         console.error(error);
         return NextResponse.error();

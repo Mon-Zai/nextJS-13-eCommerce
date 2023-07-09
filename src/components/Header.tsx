@@ -16,16 +16,19 @@ export default function Header() {
                     TPO
                 </Link>
                 <div className="flex items-center z-10">
-                    <div className="p-2">
-                        <Link href="/Cart" className="p-2">
-                            Cart
-                        </Link>
-                    </div>
                     {status === 'loading' ? ('Loading')
                         : session?.user ?
                             (<UserMenu session={session} />) :
                             (<Link href="/SignIn">Sign In</Link>)
                     }
+                    <div className="p-2">
+                        <Link href="/Cart" className="p-2">
+                            Cart
+                        </Link>
+                        <span className="ml-1 rounded-full bg-white-600 px-2 py-1 text-xs font-bold text-black shadow">
+                            0
+                        </span>
+                    </div>
                 </div>
             </nav>
         </div>
