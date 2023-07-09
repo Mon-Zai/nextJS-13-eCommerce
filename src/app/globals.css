@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+.dropdown-link{
+    @apply flex p-2 hover:bg-slate-600;
+}
