@@ -3,10 +3,13 @@
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import UserMenu from "@/components/UserMenu";
+import { useContext, useEffect, useState } from "react";
+import { CartContext } from "./context/CartProvider";
 
 
 export default function Header() {
     const { status, data: session } = useSession();
+    const {cartLenght} = useContext(CartContext);
 
     return (
         <div className="sticky top-0 p-6 bg-white border-b border-solid border-blue-900 
@@ -26,7 +29,9 @@ export default function Header() {
                             Cart
                         </Link>
                         <span className="ml-1 rounded-full bg-white-600 px-2 py-1 text-xs font-bold text-black shadow">
-                            0
+                            ({
+                                cartLenght
+                            })
                         </span>
                     </div>
                 </div>
@@ -39,6 +44,12 @@ export default function Header() {
 
 
 /*
+  useEffect(() => {
+        if (!session?.user) {
+            return
+        }
+        const id = session.user.id
+        getProducts(id);
+    })
 
- {cartItems.length>0 && (
 */

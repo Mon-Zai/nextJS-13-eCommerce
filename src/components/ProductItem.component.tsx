@@ -1,8 +1,10 @@
 
 'use client'
-import { toast } from 'react-toastify'
-import './ProductItem.component.css'
 import { useContext } from 'react'
+import './ProductItem.component.css'
+import { useSession } from 'next-auth/react'
+import { CartContext } from './context/CartProvider'
+import getCartProducts from '../../lib/getCartProducts'
 
 
 type ProductProps = {
@@ -14,15 +16,45 @@ type ProductProps = {
     countInStock: number
     description: string
     isFeatured: boolean
-    banner: String
+    banner: string
 }
 
 
 export default function ProductItem({ id, name, category, image, price, countInStock, description, isFeatured, banner, }: ProductProps){ 
 
- const addToCart= async()=>{
-   
- }
+    const { status, data: session } = useSession();
+    const {cartProducts,setCartProducts} =useContext(CartContext)
+
+    async function  addToCart() {
+        if(!session?.user){
+            alert('Please sign in to add products');
+            return
+        }
+        const data = {
+            user_id :session.user.id,
+            product_id:id
+        };
+    
+        try {
+          const response = await fetch('/api/cart', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer your_token_here', // If authentication is required
+            },
+            body: JSON.stringify(data),
+          });
+  
+          const result = await response.json();
+          console.log("(PRODUCT ITEM)"+result);
+          const cartFetch = await getCartProducts(data.user_id);
+          console.log("Cart Fetch (PRODUCT ITEM): "+cartFetch)
+          const cartToArray = JSON.stringify(cartFetch).split(',');
+          setCartProducts(cartToArray)
+        } catch (error) {
+          console.error(error);
+        }
+      };
     return (
         <div className='product'>
             <img

@@ -13,6 +13,11 @@ export const options: NextAuthOptions = {
         CredentialsProvider({
             name: "Credentials",
             credentials: {
+                id: {
+                    label: "id:",
+                    type: "text",
+                    placeholder: "your-cool-username"
+                },
                 username: {
                     label: "username:",
                     type: "text",

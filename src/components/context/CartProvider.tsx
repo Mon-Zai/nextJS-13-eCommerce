@@ -1,41 +1,48 @@
-import { createContext, useEffect, useState } from "react";
+'use client'
 
-export const Context = createContext({});
+import { createContext, useEffect, useState } from "react";
+import getCartProducts from "../../../lib/getCartProducts";
+import { useSession } from "next-auth/react";
+
+export const CartContext = createContext({});
 
 export function CartProvider({ children }: {
     children: React.ReactNode
 }) {
+    const { status, data: session } = useSession();
     const local = typeof window !== "undefined" ? window.localStorage : null;
-    const [cartProducts, setCartProducts] = useState<string[]>([]);
-    useEffect(() => {
-        if (cartProducts?.length > 0) {
-            local?.setItem('cart', JSON.stringify(cartProducts));
+    const [cartProducts, setCartProducts] = useState([]);
+    const [cartLenght, setCartLenght] = useState<number>(0)
+
+    useEffect(()=>{
+        updateCartLenght();
+    },[session])
+    useEffect(()=>{
+        updateCartLenght();
+    },[cartProducts])
+
+    async function updateCartLenght(){
+        if(!session?.user){
+            setCartLenght(0)
+            return
         }
-    }, [cartProducts]);
-    useEffect(() => {
-        const item = local?.getItem('cart');
-        if (local && item) {
-            setCartProducts(JSON.parse(item));
+        const cartFetch = await getCartProducts(session.user.id);
+        console.log("Cart Fetch: "+cartFetch)
+        if(cartFetch==='Card is Empty'){
+            console.log("No items added yet");
+            setCartLenght(0);
+            return
         }
-    }, []);
-    function addProduct(id: string) {
-        setCartProducts(prev => [...prev, id]);
+        const cartToArray = JSON.stringify(cartFetch).split(',');
+        console.log("CartToArray: "+cartToArray)
+        console.log("CartToArray lenght: "+cartToArray.length)
+        setCartLenght(cartToArray.length);
+        console.log("cart lenght: "+cartLenght)
     }
-    function removeProduct(id: string) {
-        setCartProducts(prev => {
-            const pos = prev.indexOf(id);
-            if (pos !== -1) {
-                return prev.filter((value, index) => index !== pos);
-            }
-            return prev;
-        });
-    }
-    function clearCart() {
-        setCartProducts([]);
-    }
+
     return (
-        <Context.Provider value={{ cartProducts, setCartProducts, addProduct, removeProduct, clearCart }}>
+        <CartContext.Provider value={{ cartProducts, setCartProducts,cartLenght}}>
             {children}
-        </Context.Provider>
+        </CartContext.Provider>
     );
 }

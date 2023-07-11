@@ -2,6 +2,9 @@ import Header from '@/components/Header'
 import './globals.css'
 import { Inter } from 'next/font/google'
 import AuthProvider from '@/components/context/AuthProvider'
+import { CartProvider } from '@/components/context/CartProvider'
+
+
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -19,13 +22,14 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <AuthProvider>
-          <header>
-            <Header />
-          </header>
-          {children}
-          <footer>
-
-          </footer>
+          <CartProvider>
+            <header>
+              <Header />
+            </header>
+            {children}
+            <footer>
+            </footer>
+          </CartProvider>
         </AuthProvider>
       </body>
     </html>

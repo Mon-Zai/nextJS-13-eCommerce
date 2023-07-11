@@ -16,7 +16,7 @@ export default function UserMenu({ session }: menutitle) {
     return (
         <Menu as="div" className="relative inline-block">
             <Menu.Button>
-                {session.user?.name}
+                {session.user?.id}
             </Menu.Button>
             <Menu.Items className="absolute right-0 w-56 origin-top-right shadow-lg bg-slate-500">
                 <Menu.Item>
