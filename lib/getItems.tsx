@@ -1,6 +1,6 @@
-export default async function getCartProducts(id: string) {
+export default async function getItems(id: string) {
     try {
-        const response = await fetch(`/api/cart/${id}/`, {
+        const response = await fetch(`/api/item/${id}/`, {
 
             method: "GET",
             headers: {
@@ -8,11 +8,9 @@ export default async function getCartProducts(id: string) {
                 "Content-Type": "application/json",
             },
         });
-
-        const result = await response.json();
-        const cartProducts = result;
-        console.log("CART PRODUCTS: " +  cartProducts);
-        return cartProducts.product_id
+        const items = await response.json();
+        console.log("ITEMS: " + items)
+        return items
     } catch (error) {
         console.error("An error occurred during cart fetch:", error);
         throw error;

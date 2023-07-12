@@ -9,7 +9,7 @@ import { CartContext } from "./context/CartProvider";
 
 export default function Header() {
     const { status, data: session } = useSession();
-    const {cartLenght} = useContext(CartContext);
+    const { cartProducts } = useContext(CartContext)
 
     return (
         <div className="sticky top-0 p-6 bg-white border-b border-solid border-blue-900 
@@ -28,11 +28,15 @@ export default function Header() {
                         <Link href="/Cart" className="p-2">
                             Cart
                         </Link>
-                        <span className="ml-1 rounded-full bg-white-600 px-2 py-1 text-xs font-bold text-black shadow">
-                            ({
-                                cartLenght
-                            })
-                        </span>
+
+                        {session?.user!=null  && (
+                            <span className="ml-1 rounded-full bg-white-600 px-2 py-1 text-xm font-bold text-black shadow">
+                                {cartProducts?.length}
+                            </span>
+                        )}
+                    
+
+
                     </div>
                 </div>
             </nav>

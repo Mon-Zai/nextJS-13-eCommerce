@@ -31,8 +31,16 @@ model User{
     isAdmin Boolean @default(false)
 }
 
+model Item{
+  id String  @id @default(auto()) @map("_id") @db.ObjectId
+  product_id String @unique
+  quantity Int
+  cart_id String @db.ObjectId
+}
+
 model Cart{
   id String  @id @default(auto()) @map("_id") @db.ObjectId
   user_id String @unique
-  product_id String[]
+  items String[]  @db.ObjectId
 }
+

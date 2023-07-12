@@ -1,47 +1,50 @@
 'use client'
 
 import { createContext, useEffect, useState } from "react";
-import getCartProducts from "../../../lib/getCartProducts";
+import getCart from "../../../lib/getCart";
 import { useSession } from "next-auth/react";
+import { stat } from "fs";
+import getItems from "../../../lib/getItems";
 
-export const CartContext = createContext({});
+export const CartContext = createContext({
+    cartProducts:[],
+    setCartProducts(cart:string[]){},
+
+});
 
 export function CartProvider({ children }: {
     children: React.ReactNode
 }) {
     const { status, data: session } = useSession();
-    const local = typeof window !== "undefined" ? window.localStorage : null;
     const [cartProducts, setCartProducts] = useState([]);
-    const [cartLenght, setCartLenght] = useState<number>(0)
 
     useEffect(()=>{
-        updateCartLenght();
-    },[session])
-    useEffect(()=>{
-        updateCartLenght();
-    },[cartProducts])
-
-    async function updateCartLenght(){
+        if(cartProducts.length===0){
+         cartSetup();
+        }
+     },[session])
+    async function cartSetup(){
         if(!session?.user){
-            setCartLenght(0)
+           setCartProducts([])
             return
         }
-        const cartFetch = await getCartProducts(session.user.id);
-        console.log("Cart Fetch: "+cartFetch)
+        const cartFetch = await getCart(session.user.id);
+        console.log("CART PROVIDER cart fetch id: "+cartFetch.id)
         if(cartFetch==='Card is Empty'){
-            console.log("No items added yet");
-            setCartLenght(0);
+            console.log("cart not found");
             return
         }
-        const cartToArray = JSON.stringify(cartFetch).split(',');
-        console.log("CartToArray: "+cartToArray)
-        console.log("CartToArray lenght: "+cartToArray.length)
-        setCartLenght(cartToArray.length);
-        console.log("cart lenght: "+cartLenght)
+        const itemsFetch = await getItems(cartFetch.id)
+        console.log("CART PROVIDER items fetch id: "+JSON.stringify(itemsFetch));
+
+        itemsFetch.map(item=>(
+            console.log('quantity: '+item.quantity)
+          ))
+        //setCartProducts(cartToArray);
     }
 
     return (
-        <CartContext.Provider value={{ cartProducts, setCartProducts,cartLenght}}>
+        <CartContext.Provider value={{ cartProducts, setCartProducts}}>
             {children}
         </CartContext.Provider>
     );
