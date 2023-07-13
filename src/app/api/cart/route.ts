@@ -3,14 +3,7 @@ import { NextResponse } from 'next/server';
 import { json } from 'stream/consumers';
 export async function POST(request: Request) {
     try {
-        const { user_id, product_id, quantity } = await request.json();
-        console.log('User id: ' + user_id);
-        console.log('Product id: ' + product_id);
-        console.log('Quantity: ' + quantity);
-        const item = {
-            product_id: product_id,
-            quantity: quantity
-        }
+        const { user_id, product_id, quantity, price, image, description,name } = await request.json();
         const userCart = await prisma.cart.findUnique({
             where: {
                 user_id: user_id
@@ -24,22 +17,45 @@ export async function POST(request: Request) {
                 }
             })
             if (item != null) {
-                await prisma.item.update({
+                const updateItem= await prisma.item.update({
                     where: {
                         id:item.id,
                     },
                     data: {
-                        quantity: {increment: quantity}
+                        quantity: {increment: quantity},
+                        totalprice: {increment: price}
                     }
                 })
+                if(updateItem.quantity===0){
+                    console.log("Item removal operation")
+                    const idRemove= updateItem.id
+                    await prisma.item.delete({
+                        where:{
+                            id:idRemove
+                        }
+                    })
+                    await prisma.cart.update({
+                        where:{
+                            id:userCart.id
+                        },
+                        data:{
+                            items: userCart.items.filter((id) => id !== idRemove), 
+                        }
+                    })
+                }
                 return NextResponse.json({message:'Item Quantity Changed'})
             }
             else {
                 const newItem = await prisma.item.create({
                     data:{
-                        product_id:product_id,
+                        name:name,
+                        image:image,
+                        product_id:product_id, 
                         quantity:quantity,
-                        cart_id: userCart.id
+                        cart_id: userCart.id,
+                        price:price,
+                        totalprice:price,
+                        description: description
                     }
                 })
                 await prisma.cart.update({
@@ -61,9 +77,14 @@ export async function POST(request: Request) {
             })
             const newItem = await prisma.item.create({
                 data:{
-                    product_id:product_id,
+                    name:name,
+                    image:image,
+                    product_id:product_id, 
                     quantity:quantity,
-                    cart_id: newCart.id
+                    cart_id: newCart.id,
+                    price:price,
+                    totalprice:price,
+                    description: description
                 }
             })
             await prisma.cart.update({

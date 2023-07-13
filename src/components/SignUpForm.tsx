@@ -1,7 +1,7 @@
 'use client'
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-
+import './Form.component.css'
 
 export default function SignUpForm() {
   const [username, setUsername] = useState('');
@@ -46,12 +46,12 @@ export default function SignUpForm() {
   return (
     <div>
       <form
-        className="mx-auto max-w-screen-md"
+        className="mx-auto defaultForm max-w-screen-xl text-xl"
         id="signupForm"
         name="signupForm"
         onSubmit={handleSubmit}
       >
-        <h1 className="mb-4 text-xl">Create Account</h1>
+        <h1 className="mb-4 text-xl text-center">Create Account</h1>
         <div className="mb-4">
           <label htmlFor="username">Username</label>
           <input
@@ -98,8 +98,8 @@ export default function SignUpForm() {
             onChange={(event) => setConfirmPassword(event.target.value)}
           />
         </div>
-        <div className="mb-4 ">
-          <button type='submit' className="primary-button">Register</button>
+        <div className="mb-4 items-center text-center object-center">
+          <button type='submit' className="defaultButton">Sign Up</button>
         </div>
         <div className="mb-4 ">
         </div>

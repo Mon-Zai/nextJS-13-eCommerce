@@ -5,6 +5,8 @@ import './ProductItem.component.css'
 import { useSession } from 'next-auth/react'
 import { CartContext } from './context/CartProvider'
 import getCartProducts from '../../lib/getCart'
+import getItems from '../../lib/getItems'
+import updateCart from '../../lib/updateCart'
 
 
 type ProductProps = {
@@ -23,7 +25,7 @@ type ProductProps = {
 export default function ProductItem({ id, name, category, image, price, countInStock, description, isFeatured, banner, }: ProductProps) {
 
   const { status, data: session } = useSession();
-  const { cartProducts, setCartProducts } = useContext(CartContext)
+  const { cartQuantity, setCartQuantity, items, setItems } = useContext(CartContext)
 
   async function addToCart() {
     if (!session?.user) {
@@ -31,44 +33,32 @@ export default function ProductItem({ id, name, category, image, price, countInS
       return
     }
     const data = {
-      user_id: session.user.id,
+      name: name,
+      image: image,
       product_id: id,
-      quantity: 1
+      quantity: 1,
+      description: description,
+      price: price,
+      user_id: session.user.id,
     };
-
     try {
-      const response = await fetch('/api/cart', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer your_token_here', // If authentication is required
-        },
-        body: JSON.stringify(data),
-      });
-
-      const result = await response.json();
-      console.log("PRODUCT ITEM OPERATION: "+result.message);
-      const cartFetch = await getCartProducts(session.user.id);
-      console.log("Cart Fetch: "+cartFetch)
-      if(cartFetch==='Card is Empty'){
-          console.log("No items added yet");
-          return
-      }
-      //const cartToArray = JSON.stringify(cartFetch).split(',');
-      //setCartProducts(cartToArray)
-      //console.log("PRODUCT ITEM cartProduct:"+cartProducts?.length)
+      await updateCart(data);
+      setCartQuantity(cartQuantity + 1)
     } catch (error) {
       console.error(error);
     }
   };
   return (
-    <div className='product'>
+    <div className='block rounded-lg border border-gray-200 shadow-md bg-white product mx-16'>
       <img
+        className="rounded shadow object-cover w-full image"
         src={image}
       ></img>
-      <h2>{name}</h2>
-      <p>{description}</p>
-      <label>{price}</label>
+      <div className="flex flex-col items-center justify-center p-5">
+        <h2 className='title'>{name}</h2>
+        <p className='mb-2'>{description}</p>
+        <label className='price'>{price}$</label>
+      </div>
       <div className='options'>
         <button className='button add' onClick={addToCart}>Add</button>
       </div>

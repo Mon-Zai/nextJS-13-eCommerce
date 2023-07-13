@@ -1,0 +1,28 @@
+.defaultForm{
+    margin-top: 10%;
+    background-color: rgb(255, 255, 255);
+    border-radius: 5px;
+    padding: 30px;
+    size: 200px;
+}
+
+label{
+    font-weight: bold;
+}
+input{
+    border-radius: 8px;
+    color: white;
+    background-color: rgb(91, 91, 91);
+}
+
+.defaultButton{
+    font-size: 120%;
+    color: white;
+    font-weight: bold;
+    width: 50%;
+    height: 90%;
+    border-color: transparent;
+    background-color: black;
+    box-shadow: 50px;
+    border-radius: 8px;
+}

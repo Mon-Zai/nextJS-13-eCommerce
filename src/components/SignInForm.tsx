@@ -3,7 +3,7 @@ import { signIn, useSession } from "next-auth/react";
 import { redirect, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-
+import './Form.component.css'
 export default function SignInForm() {
 
   const { data: session } = useSession();
@@ -11,9 +11,6 @@ export default function SignInForm() {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
-  const [error, setError] = useState("");
-
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/";
 
@@ -23,7 +20,7 @@ export default function SignInForm() {
       console.log("User: "+session?.user?.name)
       redirect("/");
     }else{
-      console.log("f")
+      console.log("Not logged in")
     }
   })
   const handleSubmit = async (event:any) => {
@@ -42,7 +39,7 @@ export default function SignInForm() {
   return (
     <div>
       <form
-        className="mx-auto max-w-screen-md"
+        className="mx-auto defaultForm max-w-screen-xl text-xl"
         id="signupForm"
         name="signupForm"
         onSubmit={handleSubmit}
@@ -70,8 +67,8 @@ export default function SignInForm() {
             autoFocus
           ></input>
         </div>
-        <div className="mb-4 ">
-          <button type='submit' className="primary-button">Sign In</button>
+        <div className="mb-4 items-center text-center object-center">
+          <button type='submit' className="defaultButton">Sign In</button>
         </div>
         <div className="mb-4">
     
@@ -82,7 +79,6 @@ export default function SignInForm() {
         </div>
       </form>
     </div>
-
   )
 }
 

@@ -1,4 +1,4 @@
-export default async function getItems(id: string) {
+export default async function getItems(id: string) : Promise<any> {
     try {
         const response = await fetch(`/api/item/${id}/`, {
 
@@ -9,10 +9,9 @@ export default async function getItems(id: string) {
             },
         });
         const items = await response.json();
-        console.log("ITEMS: " + items)
         return items
     } catch (error) {
-        console.error("An error occurred during cart fetch:", error);
+        console.error("An error occurred during item fetch:", error);
         throw error;
     }
 };

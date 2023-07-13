@@ -4,8 +4,8 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
 
     // Code to fetch item data based on the userID
     try {
-        const user_id = params.id;
-        console.log("API ID: " + user_id)
+        const user_id = await params.id;
+        console.log("API ID CART: " + user_id)
         const userCart = await prisma.cart.findUnique({
             where: {
                 user_id: user_id
@@ -16,7 +16,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
             return NextResponse.json(userCart);
 
         } else {
-            return NextResponse.json({ product_id: 'Card is Empty' });
+            return NextResponse.json({ message: 'Card is Empty' });
 
         }
     } catch (error) {

@@ -33,14 +33,31 @@ model User{
 
 model Item{
   id String  @id @default(auto()) @map("_id") @db.ObjectId
+  name String
+  image String
   product_id String @unique
   quantity Int
   cart_id String @db.ObjectId
+  price Float
+  totalprice Float
+  description String
 }
 
 model Cart{
   id String  @id @default(auto()) @map("_id") @db.ObjectId
   user_id String @unique
   items String[]  @db.ObjectId
+}
+
+model bill{
+    id String  @id @default(auto()) @map("_id") @db.ObjectId
+    user_id String @unique
+    name String
+    lastname String
+    address String
+    paymentmethod String
+    cardnumber String
+    items String[]
+    total Float
 }
 

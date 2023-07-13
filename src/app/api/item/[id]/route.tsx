@@ -4,7 +4,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
 
     // Code to fetch item data based on the userID
     try {
-        const cart_id = params.id;
+        const cart_id = await params.id;
         console.log("API CART ID: " + cart_id)
         const items = await prisma.item.findMany({
             where: {
